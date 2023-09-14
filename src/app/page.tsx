@@ -1,95 +1,238 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
 
+import { useEffect, useState } from "react";
+import { fetchDumpsterPrice, fetchHaulerRate } from "./utils";
+
+const MIN_ROI_MONTHS = 50;
+
+async function validateZipCode(zipCode: string) {
+  const res = await fetch(`/api/serviceCoverage?zipCode=${zipCode}`);
+  const resJson = await res.json();
+  return resJson.city;
+}
 export default function Home() {
+  const [zipCode, setZipCode] = useState("");
+  const [city, setCity] = useState("");
+  const [isServiceable, setIsServiceable] = useState(false);
+  const [dumpsterQuantity, setDumpsterQuantity] = useState(1);
+  const [dumpsterSize, setDumpsterSize] = useState(2);
+  const [pickupFrequency, setPickupFrequency] = useState(1);
+  const [haulerRate, setHaulerRate] = useState(0);
+  const [previousRate, setPreviousRate] = useState(0);
+  const [dumpsterTotalPrice, setDumpsterTotalPrice] = useState(0);
+  const [LDAmount, setLDAmount] = useState(0);
+  const [contractRate, setContractRate] = useState(0);
+  console.log({
+    zipCode,
+    dumpsterQuantity,
+    dumpsterSize,
+    pickupFrequency,
+    previousRate,
+    dumpsterTotalPrice,
+    LDAmount,
+    contractRate,
+  });
+
+  useEffect(() => {
+    async function fetchData() {
+      const dumpsterPrice = await fetchDumpsterPrice(
+        city,
+        dumpsterSize,
+        dumpsterQuantity
+      );
+      setDumpsterTotalPrice(dumpsterPrice);
+      const haulerRate = await fetchHaulerRate(
+        city,
+        dumpsterSize,
+        dumpsterQuantity,
+        pickupFrequency
+      );
+      setHaulerRate(haulerRate);
+    }
+    fetchData();
+  }, [city, dumpsterSize, dumpsterQuantity, pickupFrequency]);
+
+  useEffect(() => {
+    setLDAmount(previousRate * 6 + dumpsterTotalPrice + 230);
+  }, [previousRate, dumpsterTotalPrice]);
+
+  useEffect(() => {
+    setContractRate(LDAmount / MIN_ROI_MONTHS + haulerRate);
+  }, [LDAmount, haulerRate]);
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <div>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const city = await validateZipCode(zipCode);
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+          if (city) {
+            window.alert("It's serviceable area!");
+            setCity(city);
+            setIsServiceable(true);
+          } else {
+            window.alert("It's unserviceable area!");
+            setIsServiceable(false);
+          }
+        }}
+      >
+        <label htmlFor="zipCode"></label>
+        <input
+          type="search"
+          placeholder="zip code"
+          id="zipCode"
+          name="zipCode"
+          required
+          onChange={(e) => {
+            setZipCode(e.target.value);
+          }}
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+        <input type="submit" value="search" />
+      </form>
+      {isServiceable ? (
+        <div>
+          <form>
+            <div>
+              <label htmlFor="dumpsterSize">Dumpster Size: </label>
+              <input
+                name="dumpsterSize"
+                id="dumpsterSize"
+                type="number"
+                onChange={async (e) => {
+                  const size = Number(e.target.value);
+                  setDumpsterSize(size);
+                }}
+                defaultValue={dumpsterSize}
+              />{" "}
+              Yards
+            </div>
+            <div>
+              <label htmlFor="dumpsterQuantity">Dumpster Quantity</label>
+              <input
+                type="number"
+                name="dumpsterQuantity"
+                id="dumpsterQuantity"
+                defaultValue={dumpsterQuantity}
+                onChange={async (e) => {
+                  const qty = Number(e.target.value);
+                  setDumpsterQuantity(qty);
+                }}
+              />{" "}
+              ea
+            </div>
+            <div>
+              <label htmlFor="dumpsterTotalPrice">Dumpster Price $</label>
+              <input
+                type="number"
+                name="dumpsterTotalPrice"
+                id="dumpsterTotalPrice"
+                min="0"
+                value={Number(dumpsterTotalPrice).toFixed(2)}
+                disabled
+              />
+            </div>
+            <div>
+              <label htmlFor="pickupFrequency">Number Of Pickups</label>
+              <select
+                name="pickupFrequency"
+                id="pickupFrequency"
+                required
+                onChange={async (e) => {
+                  const freq = Number(e.target.value);
+                  setPickupFrequency(freq);
+                }}
+                defaultValue={pickupFrequency}
+              >
+                <option value={1}>1 / week</option>
+                <option value={2}>2 / week</option>
+                <option value={3}>3 / week</option>
+                <option value={4}>4 / week</option>
+                <option value={5}>5 / week</option>
+                <option value={6}>6 / week</option>
+                <option value={0.5}>Every Other Week</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="haulerRate">Hauler Rate $</label>
+              <input
+                name="haulerRate"
+                id="haulerRate"
+                type="number"
+                min="0"
+                value={Number(haulerRate).toFixed(2)}
+                disabled
+              />
+            </div>
+            <div>
+              <label htmlFor="previousRate">Previous Rate $</label>
+              <input
+                name="previousRate"
+                id="previousRate"
+                type="number"
+                value={previousRate.toString()}
+                onChange={(e) => {
+                  const rate = Number(e.target.value);
+                  setPreviousRate(rate);
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="LDAmount">LD AMount $</label>
+              <input
+                name="LDAmount"
+                id="LDAmount"
+                type="number"
+                value={Number(LDAmount).toFixed(2)}
+                disabled
+              />
+            </div>
+            <div>
+              <div>
+                <label htmlFor="contractRate">Contract Rate $</label>
+                <input
+                  type="number"
+                  name="contractRate"
+                  id="contractRate"
+                  value={contractRate.toString()}
+                  onChange={(e) => {
+                    const rate = Number(e.target.value);
+                    setContractRate(rate);
+                  }}
+                />
+              </div>
+              <span>
+                min. ${Math.round(LDAmount / MIN_ROI_MONTHS + haulerRate)}
+              </span>
+              <input
+                name="contractRateRange"
+                id="contractRateRange"
+                type="range"
+                min={Math.round(LDAmount / MIN_ROI_MONTHS + haulerRate)}
+                max={previousRate * 2}
+                value={contractRate.toString()}
+                onChange={(e) => {
+                  const rate = Number(e.target.value);
+                  setContractRate(rate);
+                }}
+              />
+              <span>max. ${Math.round(previousRate * 2)}</span>
+            </div>
+            <div></div>
+            <div>
+              ROI Months: {Math.round(LDAmount / (contractRate - haulerRate))}
+            </div>
+            <div>
+              Discount{" "}
+              {Number(
+                ((previousRate - contractRate) / previousRate) * 100
+              ).toFixed(2)}
+              %
+            </div>
+          </form>
+        </div>
+      ) : (
+        <div></div>
+      )}
+    </div>
+  );
 }
