@@ -142,31 +142,31 @@ const haulerRates = [
   {
     city: "phoenix",
     size: 2,
-    freq: 1,
+    freq: 5,
     amount: 270.0,
   },
   {
     city: "phoenix",
     size: 3,
-    freq: 1,
+    freq: 5,
     amount: 322.0,
   },
   {
     city: "phoenix",
     size: 4,
-    freq: 1,
+    freq: 5,
     amount: 430.0,
   },
   {
     city: "phoenix",
     size: 6,
-    freq: 1,
+    freq: 5,
     amount: 645.0,
   },
   {
     city: "phoenix",
     size: 8,
-    freq: 1,
+    freq: 5,
     amount: 860.0,
   },
 ];

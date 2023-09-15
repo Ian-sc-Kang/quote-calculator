@@ -93,20 +93,6 @@ export default function Home() {
         <div>
           <form>
             <div>
-              <label htmlFor="dumpsterSize">Dumpster Size: </label>
-              <input
-                name="dumpsterSize"
-                id="dumpsterSize"
-                type="number"
-                onChange={async (e) => {
-                  const size = Number(e.target.value);
-                  setDumpsterSize(size);
-                }}
-                defaultValue={dumpsterSize}
-              />{" "}
-              Yards
-            </div>
-            <div>
               <label htmlFor="dumpsterQuantity">Dumpster Quantity</label>
               <input
                 type="number"
@@ -120,6 +106,21 @@ export default function Home() {
               />{" "}
               ea
             </div>
+            <div>
+              <label htmlFor="dumpsterSize">Dumpster Size: </label>
+              <input
+                name="dumpsterSize"
+                id="dumpsterSize"
+                type="number"
+                onChange={async (e) => {
+                  const size = Number(e.target.value);
+                  setDumpsterSize(size);
+                }}
+                defaultValue={dumpsterSize}
+              />{" "}
+              Yards
+            </div>
+
             <div>
               <label htmlFor="dumpsterTotalPrice">Dumpster Price $</label>
               <input
@@ -176,6 +177,7 @@ export default function Home() {
                 }}
               />
             </div>
+
             <div>
               <label htmlFor="LDAmount">LD AMount $</label>
               <input
@@ -186,7 +188,42 @@ export default function Home() {
                 disabled
               />
             </div>
+            <br />
+            <hr />
+            <br />
             <div>
+              <div>15% Discount</div>
+              <div>Contract Rate: ${(previousRate * 0.85).toFixed(2)}</div>
+              <div>
+                ROI Months:{" "}
+                {Math.round(LDAmount / (previousRate * 0.85 - haulerRate))}{" "}
+              </div>
+              <br />
+              <hr />
+              <br />
+              <div>
+                {(
+                  ((previousRate - (LDAmount / MIN_ROI_MONTHS + haulerRate)) /
+                    previousRate) *
+                  100
+                ).toFixed(2)}
+                % Discount
+              </div>
+              <div>
+                Contract Rate: $
+                {Math.round(LDAmount / MIN_ROI_MONTHS + haulerRate)}
+              </div>
+              <div>ROI Months: {MIN_ROI_MONTHS}</div>
+              <br />
+              <hr />
+              <br />
+              <div>
+                Discount{" "}
+                {Number(
+                  ((previousRate - contractRate) / previousRate) * 100
+                ).toFixed(2)}
+                %
+              </div>
               <div>
                 <label htmlFor="contractRate">Contract Rate $</label>
                 <input
@@ -208,25 +245,18 @@ export default function Home() {
                 id="contractRateRange"
                 type="range"
                 min={Math.round(LDAmount / MIN_ROI_MONTHS + haulerRate)}
-                max={previousRate * 2}
+                max={Math.round(LDAmount / 5 + haulerRate)}
                 value={contractRate.toString()}
                 onChange={(e) => {
                   const rate = Number(e.target.value);
                   setContractRate(rate);
                 }}
               />
-              <span>max. ${Math.round(previousRate * 2)}</span>
+              <span>max. ${Math.round(LDAmount / 5 + haulerRate)}</span>
             </div>
             <div></div>
             <div>
               ROI Months: {Math.round(LDAmount / (contractRate - haulerRate))}
-            </div>
-            <div>
-              Discount{" "}
-              {Number(
-                ((previousRate - contractRate) / previousRate) * 100
-              ).toFixed(2)}
-              %
             </div>
           </form>
         </div>
