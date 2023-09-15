@@ -23,7 +23,6 @@ export default function Home() {
   const [LDAmount, setLDAmount] = useState(0);
   const [contractRate, setContractRate] = useState(0);
   const inputRefs = useRef<(HTMLInputElement | HTMLSelectElement)[]>([]);
-
   useEffect(() => {
     async function fetchData() {
       const dumpsterPrice = await fetchDumpsterPrice(
@@ -62,20 +61,25 @@ export default function Home() {
             setIsServiceable(true);
           } else {
             window.alert("It's unserviceable area!");
-            setIsServiceable(false);
           }
         }}
       >
         <label htmlFor="zipCode"></label>
         <input
           ref={(ref) => {
-            if (ref && !inputRefs.current.includes(ref)) {
+            if (
+              ref &&
+              !inputRefs.current.includes(ref) &&
+              inputRefs.current.length < 6
+            ) {
               inputRefs.current.push(ref);
             }
           }}
           onKeyUp={(e) => {
             if (e.key === "Enter") {
               inputRefs.current[1].focus();
+              console.log(inputRefs);
+              console.log("entered");
             }
           }}
           type="search"
@@ -98,7 +102,11 @@ export default function Home() {
               <label htmlFor="dumpsterQuantity">Dumpster Quantity</label>
               <input
                 ref={(ref) => {
-                  if (ref && !inputRefs.current.includes(ref)) {
+                  if (
+                    ref &&
+                    !inputRefs.current.includes(ref) &&
+                    inputRefs.current.length < 6
+                  ) {
                     inputRefs.current.push(ref);
                   }
                 }}
@@ -123,7 +131,11 @@ export default function Home() {
               <label htmlFor="dumpsterSize">Dumpster Size: </label>
               <input
                 ref={(ref) => {
-                  if (ref && !inputRefs.current.includes(ref)) {
+                  if (
+                    ref &&
+                    !inputRefs.current.includes(ref) &&
+                    inputRefs.current.length < 6
+                  ) {
                     inputRefs.current.push(ref);
                   }
                 }}
@@ -149,7 +161,11 @@ export default function Home() {
               <label htmlFor="pickupFrequency">Number Of Pickups</label>
               <select
                 ref={(ref) => {
-                  if (ref && !inputRefs.current.includes(ref)) {
+                  if (
+                    ref &&
+                    !inputRefs.current.includes(ref) &&
+                    inputRefs.current.length < 6
+                  ) {
                     inputRefs.current.push(ref);
                   }
                 }}
@@ -181,7 +197,11 @@ export default function Home() {
               <label htmlFor="previousRate">Previous Rate $</label>
               <input
                 ref={(ref) => {
-                  if (ref && !inputRefs.current.includes(ref)) {
+                  if (
+                    ref &&
+                    !inputRefs.current.includes(ref) &&
+                    inputRefs.current.length < 6
+                  ) {
                     inputRefs.current.push(ref);
                   }
                 }}
@@ -277,7 +297,11 @@ export default function Home() {
                 <label htmlFor="contractRate">Contract Rate $</label>
                 <input
                   ref={(ref) => {
-                    if (ref && !inputRefs.current.includes(ref)) {
+                    if (
+                      ref &&
+                      !inputRefs.current.includes(ref) &&
+                      inputRefs.current.length < 6
+                    ) {
                       inputRefs.current.push(ref);
                     }
                   }}
