@@ -231,7 +231,9 @@ export default function Home() {
             <hr />
             <br />
             <div>
-              <div>15% Discount</div>
+              <div>
+                <b>15% Contract Rate</b>
+              </div>
               <div>Contract Rate: ${(previousRate * 0.85).toFixed(2)}</div>
               <div>
                 ROI Months:{" "}
@@ -241,6 +243,13 @@ export default function Home() {
               <hr />
               <br />
               <div>
+                <b>50 ROI Contract Rate</b>
+              </div>
+              <div>
+                Contract Rate: $
+                {Math.round(LDAmount / MIN_ROI_MONTHS + haulerRate)}
+              </div>
+              <div>
                 {(
                   ((previousRate - (LDAmount / MIN_ROI_MONTHS + haulerRate)) /
                     previousRate) *
@@ -248,21 +257,13 @@ export default function Home() {
                 ).toFixed(2)}
                 % Discount
               </div>
-              <div>
-                Contract Rate: $
-                {Math.round(LDAmount / MIN_ROI_MONTHS + haulerRate)}
-              </div>
-              <div>ROI Months: {MIN_ROI_MONTHS}</div>
               <br />
               <hr />
               <br />
               <div>
-                Discount{" "}
-                {Number(
-                  ((previousRate - contractRate) / previousRate) * 100
-                ).toFixed(2)}
-                %
+                <b>Adjustable Contract Rate</b>
               </div>
+
               <div>
                 <label htmlFor="contractRate">Contract Rate $</label>
                 <input
@@ -305,7 +306,13 @@ export default function Home() {
               />
               <span>max. ${Math.round(LDAmount / 5 + haulerRate)}</span>
             </div>
-            <div></div>
+            <div>
+              Discount{" "}
+              {Number(
+                ((previousRate - contractRate) / previousRate) * 100
+              ).toFixed(2)}
+              %
+            </div>
             <div>
               ROI Months: {Math.round(LDAmount / (contractRate - haulerRate))}
             </div>
