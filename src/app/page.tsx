@@ -138,17 +138,6 @@ export default function Home() {
             </div>
 
             <div>
-              <label htmlFor="dumpsterTotalPrice">Dumpster Price $</label>
-              <input
-                type="number"
-                name="dumpsterTotalPrice"
-                id="dumpsterTotalPrice"
-                min="0"
-                value={Number(dumpsterTotalPrice).toFixed(2)}
-                disabled
-              />
-            </div>
-            <div>
               <label htmlFor="pickupFrequency">Number Of Pickups</label>
               <select
                 ref={(ref) => {
@@ -181,17 +170,6 @@ export default function Home() {
               </select>
             </div>
             <div>
-              <label htmlFor="haulerRate">Hauler Rate $</label>
-              <input
-                name="haulerRate"
-                id="haulerRate"
-                type="number"
-                min="0"
-                value={Number(haulerRate).toFixed(2)}
-                disabled
-              />
-            </div>
-            <div>
               <label htmlFor="previousRate">Previous Rate $</label>
               <input
                 ref={(ref) => {
@@ -214,6 +192,29 @@ export default function Home() {
                   setPreviousRate(rate);
                 }}
                 tabIndex={4}
+              />
+            </div>
+            <br />
+            <div>
+              <label htmlFor="dumpsterTotalPrice">Dumpster Price $</label>
+              <input
+                type="number"
+                name="dumpsterTotalPrice"
+                id="dumpsterTotalPrice"
+                min="0"
+                value={Number(dumpsterTotalPrice).toFixed(2)}
+                disabled
+              />
+            </div>
+            <div>
+              <label htmlFor="haulerRate">Hauler Rate $</label>
+              <input
+                name="haulerRate"
+                id="haulerRate"
+                type="number"
+                min="0"
+                value={Number(haulerRate).toFixed(2)}
+                disabled
               />
             </div>
 
