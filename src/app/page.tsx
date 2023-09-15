@@ -23,17 +23,6 @@ export default function Home() {
   const [LDAmount, setLDAmount] = useState(0);
   const [contractRate, setContractRate] = useState(0);
   const inputRefs = useRef<(HTMLInputElement | HTMLSelectElement)[]>([]);
-  console.log({
-    zipCode,
-    dumpsterQuantity,
-    dumpsterSize,
-    pickupFrequency,
-    previousRate,
-    dumpsterTotalPrice,
-    LDAmount,
-    contractRate,
-    inputRefs,
-  });
 
   useEffect(() => {
     async function fetchData() {
@@ -291,7 +280,7 @@ export default function Home() {
                   type="number"
                   name="contractRate"
                   id="contractRate"
-                  value={contractRate.toString()}
+                  value={Math.round(contractRate).toString()}
                   onChange={(e) => {
                     const rate = Number(e.target.value);
                     setContractRate(rate);
