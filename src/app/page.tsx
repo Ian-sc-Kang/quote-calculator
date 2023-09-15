@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchDumpsterPrice, fetchHaulerRate } from "./utils";
 
 const MIN_ROI_MONTHS = 50;
@@ -22,6 +22,7 @@ export default function Home() {
   const [dumpsterTotalPrice, setDumpsterTotalPrice] = useState(0);
   const [LDAmount, setLDAmount] = useState(0);
   const [contractRate, setContractRate] = useState(0);
+  const inputRefs = useRef<(HTMLInputElement | HTMLSelectElement)[]>([]);
   console.log({
     zipCode,
     dumpsterQuantity,
@@ -31,6 +32,7 @@ export default function Home() {
     dumpsterTotalPrice,
     LDAmount,
     contractRate,
+    inputRefs,
   });
 
   useEffect(() => {
@@ -86,6 +88,8 @@ export default function Home() {
           onChange={(e) => {
             setZipCode(e.target.value);
           }}
+          autoFocus
+          tabIndex={0}
         />
         <input type="submit" value="search" />
       </form>
@@ -95,6 +99,16 @@ export default function Home() {
             <div>
               <label htmlFor="dumpsterQuantity">Dumpster Quantity</label>
               <input
+                ref={(ref) => {
+                  if (ref && !inputRefs.current.includes(ref)) {
+                    inputRefs.current.push(ref);
+                  }
+                }}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    inputRefs.current[1].focus();
+                  }
+                }}
                 type="number"
                 name="dumpsterQuantity"
                 id="dumpsterQuantity"
@@ -103,12 +117,24 @@ export default function Home() {
                   const qty = Number(e.target.value);
                   setDumpsterQuantity(qty);
                 }}
+                tabIndex={1}
+                autoFocus
               />{" "}
               ea
             </div>
             <div>
               <label htmlFor="dumpsterSize">Dumpster Size: </label>
               <input
+                ref={(ref) => {
+                  if (ref && !inputRefs.current.includes(ref)) {
+                    inputRefs.current.push(ref);
+                  }
+                }}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    inputRefs.current[2].focus();
+                  }
+                }}
                 name="dumpsterSize"
                 id="dumpsterSize"
                 type="number"
@@ -117,6 +143,7 @@ export default function Home() {
                   setDumpsterSize(size);
                 }}
                 defaultValue={dumpsterSize}
+                tabIndex={2}
               />{" "}
               Yards
             </div>
@@ -135,6 +162,16 @@ export default function Home() {
             <div>
               <label htmlFor="pickupFrequency">Number Of Pickups</label>
               <select
+                ref={(ref) => {
+                  if (ref && !inputRefs.current.includes(ref)) {
+                    inputRefs.current.push(ref);
+                  }
+                }}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    inputRefs.current[3].focus();
+                  }
+                }}
                 name="pickupFrequency"
                 id="pickupFrequency"
                 required
@@ -143,6 +180,7 @@ export default function Home() {
                   setPickupFrequency(freq);
                 }}
                 defaultValue={pickupFrequency}
+                tabIndex={3}
               >
                 <option value={1}>1 / week</option>
                 <option value={2}>2 / week</option>
@@ -167,6 +205,17 @@ export default function Home() {
             <div>
               <label htmlFor="previousRate">Previous Rate $</label>
               <input
+                ref={(ref) => {
+                  if (ref && !inputRefs.current.includes(ref)) {
+                    inputRefs.current.push(ref);
+                  }
+                }}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    inputRefs.current[4].focus();
+                  }
+                }}
                 name="previousRate"
                 id="previousRate"
                 type="number"
@@ -175,6 +224,7 @@ export default function Home() {
                   const rate = Number(e.target.value);
                   setPreviousRate(rate);
                 }}
+                tabIndex={4}
               />
             </div>
 
@@ -227,6 +277,17 @@ export default function Home() {
               <div>
                 <label htmlFor="contractRate">Contract Rate $</label>
                 <input
+                  ref={(ref) => {
+                    if (ref && !inputRefs.current.includes(ref)) {
+                      inputRefs.current.push(ref);
+                    }
+                  }}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      inputRefs.current[0].focus();
+                    }
+                  }}
                   type="number"
                   name="contractRate"
                   id="contractRate"
@@ -251,6 +312,7 @@ export default function Home() {
                   const rate = Number(e.target.value);
                   setContractRate(rate);
                 }}
+                tabIndex={5}
               />
               <span>max. ${Math.round(LDAmount / 5 + haulerRate)}</span>
             </div>
