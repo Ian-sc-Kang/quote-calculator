@@ -58,7 +58,6 @@ export default function Home() {
           const city = await validateZipCode(zipCode);
 
           if (city) {
-            window.alert("It's serviceable area!");
             setCity(city);
             setIsServiceable(true);
           } else {
@@ -69,6 +68,16 @@ export default function Home() {
       >
         <label htmlFor="zipCode"></label>
         <input
+          ref={(ref) => {
+            if (ref && !inputRefs.current.includes(ref)) {
+              inputRefs.current.push(ref);
+            }
+          }}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              inputRefs.current[1].focus();
+            }
+          }}
           type="search"
           placeholder="zip code"
           id="zipCode"
@@ -95,7 +104,7 @@ export default function Home() {
                 }}
                 onKeyUp={(e) => {
                   if (e.key === "Enter") {
-                    inputRefs.current[1].focus();
+                    inputRefs.current[2].focus();
                   }
                 }}
                 type="number"
@@ -107,7 +116,6 @@ export default function Home() {
                   setDumpsterQuantity(qty);
                 }}
                 tabIndex={1}
-                autoFocus
               />{" "}
               ea
             </div>
@@ -121,7 +129,7 @@ export default function Home() {
                 }}
                 onKeyUp={(e) => {
                   if (e.key === "Enter") {
-                    inputRefs.current[2].focus();
+                    inputRefs.current[3].focus();
                   }
                 }}
                 name="dumpsterSize"
@@ -147,7 +155,7 @@ export default function Home() {
                 }}
                 onKeyUp={(e) => {
                   if (e.key === "Enter") {
-                    inputRefs.current[3].focus();
+                    inputRefs.current[4].focus();
                   }
                 }}
                 name="pickupFrequency"
@@ -180,7 +188,7 @@ export default function Home() {
                 onKeyUp={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    inputRefs.current[4].focus();
+                    inputRefs.current[5].focus();
                   }
                 }}
                 name="previousRate"
